@@ -60,8 +60,8 @@ const cdnScriptsCommon = [
     "{{version}}/modules/solid-gauge.js",
     "{{version}}/modules/heatmap.js",
     "{{version}}/modules/treemap.js",
-    "{{version}}/modules/histogram-bellcurve.js"
-    "{{version}}/modules/no-data-to-display.js",
+    "{{version}}/modules/histogram-bellcurve.js",
+    "{{version}}/modules/no-data-to-display.js"
 ].concat(Object.keys(cdnScriptsOptional));
 
 const cdnScriptsStyled = [
