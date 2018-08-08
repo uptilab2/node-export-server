@@ -89,7 +89,9 @@ const cdnMoment = [
     'https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.13/moment-timezone-with-data-2012-2022.min.js'
 ];
 
-const rawScripts = [];
+const rawScripts = [
+    "https://cdn.polyfill.io/v2/polyfill.min.js?features=Intl.~locale.fr-FR,Intl.~locale.en-US,Intl.~locale.en-GB"
+];
 
 const cachedScripts = {};
 
