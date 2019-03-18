@@ -232,65 +232,60 @@ function loop() {
                         Highcharts.setOptions(globalOptions);
                     }
 
-                    try {
-                        if (typeof chartJson === 'string') {
-                            //Right. So this is not cool. BUT: we allow callbacks
-                            //and direct JS injection, so this doesn't really
-                            //open up things that aren't already open.
-                            var __chartData = eval('(' + chartJson + ')');
+                    if (typeof chartJson === 'string') {
+                        //Right. So this is not cool. BUT: we allow callbacks
+                        //and direct JS injection, so this doesn't really
+                        //open up things that aren't already open.
+                        var __chartData = eval('(' + chartJson + ')');
 
-                            if (__chartData) {
-                                __chartData.chart = __chartData.chart || {};
+                        if (__chartData) {
+                            __chartData.chart = __chartData.chart || {};
 
-                                if (__chartData.exporting) {
-                                    if (__chartData.exporting.sourceWidth) {
-                                        __chartData.chart.width = __chartData.exporting.sourceWidth;
-                                    }
-                                    if (__chartData.exporting.sourceHeight) {
-                                        __chartData.chart.height = __chartData.exporting.sourceHeight;
-                                    }
+                            if (__chartData.exporting) {
+                                if (__chartData.exporting.sourceWidth) {
+                                    __chartData.chart.width = __chartData.exporting.sourceWidth;
                                 }
-
-                                __chartData.chart.width = __chartData.chart.width || 600;
-                                __chartData.chart.height = __chartData.chart.height || 400;
+                                if (__chartData.exporting.sourceHeight) {
+                                    __chartData.chart.height = __chartData.exporting.sourceHeight;
+                                }
                             }
 
-                            options = __chartData;
+                            __chartData.chart.width = __chartData.chart.width || 600;
+                            __chartData.chart.height = __chartData.chart.height || 400;
                         }
 
-                        if (window.themeOptions && typeof window.themeOptions !== 'undefined' && Object.keys(window.themeOptions).length) {
-                            options = Highcharts.merge(true, themeOptions, options);
-                        }
+                        options = __chartData;
+                    }
 
-                        if (typeof window['dataOptions'] !== 'undefined') {
+                    if (window.themeOptions && typeof window.themeOptions !== 'undefined' && Object.keys(window.themeOptions).length) {
+                        options = Highcharts.merge(true, themeOptions, options);
+                    }
 
-                            parseData(function (opts) {
-                                var mergedOptions;
+                    if (typeof window['dataOptions'] !== 'undefined') {
 
-                                if (options.series) {
-                                    Highcharts.each(options.series, function (series, i) {
-                                        options.series[i] = Highcharts.merge(series, opts.series[i]);
-                                    });
-                                }
+                        parseData(function (opts) {
+                            var mergedOptions;
 
-                                mergedOptions = Highcharts.merge(true, opts, options);
+                            if (options.series) {
+                                Highcharts.each(options.series, function (series, i) {
+                                    options.series[i] = Highcharts.merge(series, opts.series[i]);
+                                });
+                            }
 
-                                if (window['customCode']) {
-                                    window.customCode(mergedOptions);
-                                }
+                            mergedOptions = Highcharts.merge(true, opts, options);
 
-                                doChart(mergedOptions);
-                            }, options, dataOptions);
+                            if (window['customCode']) {
+                                window.customCode(mergedOptions);
+                            }
 
-                        } else if (typeof window['customCode'] !== 'undefined') {
-                            customCode(options);
-                            doChart(options);
-                        } else {
-                            doChart(options);
-                        }
+                            doChart(mergedOptions);
+                        }, options, dataOptions);
 
-                    } catch (e) {
-                        document.getElementById('highcharts').innerHTML = '<h1>Chart input data error</h1>' + e;
+                    } else if (typeof window['customCode'] !== 'undefined') {
+                        customCode(options);
+                        doChart(options);
+                    } else {
+                        doChart(options);
                     }
                 }
             }, data.chart, data.constr);
@@ -590,6 +585,13 @@ function loop() {
         system.stderr.writeLine('worker.js resource error - ' +
                                 JSON.stringify(err, undefined, ' ')
                                );
+    };
+
+    page.onError = function(msg, trace) {
+      system.stderr.writeLine('Uncaught Error: ' + msg);
+      system.stderr.writeLine('==== Export data ====');
+      system.stderr.writeLine(JSON.stringify(data.chart));
+      system.stderr.writeLine('=====================');
     };
 
     page.zoomFactor = parseFloat(data.scale);
