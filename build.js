@@ -51,7 +51,9 @@ const cdnScriptsQuery = {
 };
 
 // Push raw URL's here to force include them
-const cdnAdditional = [];
+const cdnAdditional = [
+    "https://storage.googleapis.com/reeport-cdn/Intl.polyfill.min.js"
+];
 
 const cdnScriptsCommon = [
     "{{version}}/highcharts-3d.js",
@@ -89,9 +91,7 @@ const cdnMoment = [
     'https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.13/moment-timezone-with-data-2012-2022.min.js'
 ];
 
-const rawScripts = [
-    "https://cdn.polyfill.io/v2/polyfill.min.js?features=Intl.~locale.fr-FR,Intl.~locale.en-US,Intl.~locale.en-GB"
-];
+const rawScripts = [];
 
 const cachedScripts = {};
 
@@ -251,7 +251,7 @@ function embed(version, scripts, out, fn, optionals) {
         fs.writeFile(
             __dirname + '/phantom/' + out + '.html',
             template
-                .replace('"{{highcharts}}";', scriptBody)
+                .replace('"{{highcharts}}";', () => scriptBody)
                 .replace('<div style="padding:5px;">', '<div style="padding:5px;display:none;">')
                 .replace('{{additionalScripts}}', additionalScripts)
                 ,
