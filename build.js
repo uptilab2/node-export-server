@@ -52,7 +52,8 @@ const cdnScriptsQuery = {
 
 // Push raw URL's here to force include them
 const cdnAdditional = [
-    "https://storage.googleapis.com/reeport-cdn/Intl.polyfill.min.js"
+    "https://storage.googleapis.com/reeport-cdn/Intl.polyfill.min.js",
+    "https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.2.2/proj4-src.js"
 ];
 
 const cdnScriptsCommon = [
@@ -83,7 +84,17 @@ const cdnLegacy = [
 ];
 
 const cdnMaps = [
-    "maps/{{version}}/modules/map.js"
+  "maps/{{version}}/modules/map.js",
+  "https://code.highcharts.com/mapdata/custom/africa.js",
+  "https://code.highcharts.com/mapdata/custom/asia.js",
+  "https://code.highcharts.com/mapdata/custom/europe.js",
+  "https://code.highcharts.com/mapdata/custom/european-union.js",
+  "https://storage.googleapis.com/reeport-cdn/highcharts/maps/france.js",
+  "https://code.highcharts.com/mapdata/custom/north-america.js",
+  "https://code.highcharts.com/mapdata/custom/oceania.js",
+  "https://code.highcharts.com/mapdata/custom/south-america.js",
+  "https://code.highcharts.com/mapdata/countries/us/us-all.js",
+  "https://code.highcharts.com/mapdata/custom/world-highres.js",
 ];
 
 const cdnMoment = [
@@ -196,7 +207,7 @@ function embed(version, scripts, out, fn, optionals) {
             // If we've allready fetched the required script, just return it.
             if (cachedScripts[fullURL]) {
               console.log(('   using cached fetch for ' + fullURL).gray);
-              scriptBody += cachedScripts[fullURL];
+              scriptBody += cachedScripts[fullURL] + ';';
               return next();
             }
 
@@ -223,7 +234,7 @@ function embed(version, scripts, out, fn, optionals) {
                 }
 
                 cachedScripts[fullURL] = body;
-                scriptBody += body;
+                scriptBody += body + ';';
                 next();
             });
         });
